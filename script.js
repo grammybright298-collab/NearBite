@@ -1,11 +1,7 @@
+```javascript
 /* =========================================================
    NEARBITE
    Restaurant Finder
-========================================================= */
-
-
-/* =========================================================
-   VARIABLES
 ========================================================= */
 
 let userLocation = null;
@@ -24,7 +20,7 @@ const categoryButtons = document.querySelectorAll(".category");
 
 
 /* =========================================================
-   LOAD MAP LIBRARY
+   LOAD MAP
 ========================================================= */
 
 function loadMapLibrary() {
@@ -47,6 +43,10 @@ function loadMapLibrary() {
         console.log("Map library loaded.");
     };
 
+    leafletScript.onerror = function () {
+        console.error("Could not load map library.");
+    };
+
     document.body.appendChild(leafletScript);
 }
 
@@ -60,7 +60,9 @@ function initializeMap(latitude, longitude) {
     if (typeof L === "undefined") {
 
         setTimeout(function () {
+
             initializeMap(latitude, longitude);
+
         }, 300);
 
         return;
@@ -96,7 +98,9 @@ function initializeMap(latitude, longitude) {
 
 
     if (userMarker) {
+
         map.removeLayer(userMarker);
+
     }
 
 
@@ -109,25 +113,25 @@ function initializeMap(latitude, longitude) {
         );
 
 
-    userMarker.openPopup();
-
-
     clearRestaurantMarkers();
-
 
     displayRestaurantMarkers();
 }
 
 
 /* =========================================================
-   CLEAR RESTAURANT MARKERS
+   CLEAR MARKERS
 ========================================================= */
 
 function clearRestaurantMarkers() {
 
     restaurantMarkers.forEach(function (marker) {
 
-        map.removeLayer(marker);
+        if (map) {
+
+            map.removeLayer(marker);
+
+        }
 
     });
 
@@ -150,10 +154,12 @@ function displayRestaurantMarkers() {
     restaurants.forEach(function (restaurant) {
 
         if (
-            !restaurant.latitude ||
-            !restaurant.longitude
+            restaurant.latitude === null ||
+            restaurant.longitude === null
         ) {
+
             return;
+
         }
 
 
@@ -169,7 +175,7 @@ function displayRestaurantMarkers() {
             <br>
             ${escapeHTML(restaurant.cuisine)}
             <br>
-            ${restaurant.distance} km away
+            ${escapeHTML(String(restaurant.distance))} km away
         `);
 
 
@@ -229,7 +235,10 @@ function getUserLocation() {
 
         function (error) {
 
-            console.error(error);
+            console.error(
+                "Location error:",
+                error
+            );
 
 
             showMessage(
@@ -238,10 +247,11 @@ function getUserLocation() {
 
         },
 
+
         {
             enableHighAccuracy: true,
-            timeout: 15000,
-            maximumAge: 0
+            timeout: 20000,
+            maximumAge: 300000
         }
 
     );
@@ -290,66 +300,146 @@ async function findRestaurants() {
 
             relation["amenity"="restaurant"]
                 (around:${radius},${latitude},${longitude});
+
+            node["amenity"="fast_food"]
+                (around:${radius},${latitude},${longitude});
+
+            way["amenity"="fast_food"]
+                (around:${radius},${latitude},${longitude});
         );
 
         out center tags;
     `;
 
 
-    const url =
-        "https://overpass-api.de/api/interpreter";
+    const endpoints = [
+
+        "https://overpass-api.de/api/interpreter",
+
+        "https://overpass.kumi.systems/api/interpreter",
+
+        "https://overpass.private.coffee/api/interpreter"
+
+    ];
 
 
-    try {
-
-        const response = await fetch(
-            url,
-            {
-                method: "POST",
-
-                body: query
-            }
-        );
+    let data = null;
+    let lastError = null;
 
 
-        if (!response.ok) {
+    for (
+        let i = 0;
+        i < endpoints.length;
+        i++
+    ) {
 
-            throw new Error(
-                "Restaurant service unavailable."
+        try {
+
+            console.log(
+                "Trying restaurant service:",
+                endpoints[i]
             );
+
+
+            const response = await fetch(
+                endpoints[i],
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded; charset=UTF-8"
+                    },
+
+                    body:
+                        "data=" +
+                        encodeURIComponent(query)
+                }
+            );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Server returned " +
+                    response.status
+                );
+
+            }
+
+
+            data =
+                await response.json();
+
+
+            if (
+                data &&
+                Array.isArray(data.elements)
+            ) {
+
+                console.log(
+                    "Restaurant data loaded:",
+                    data.elements.length
+                );
+
+                break;
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Restaurant service failed:",
+                error
+            );
+
+            lastError = error;
 
         }
 
-
-        const data =
-            await response.json();
+    }
 
 
-        restaurants =
-            processRestaurants(
-                data.elements
-            );
+    if (
+        !data ||
+        !Array.isArray(data.elements)
+    ) {
 
-
-        sortCurrentRestaurants();
-
-
-        renderRestaurants();
-
-
-        initializeMap(
-            latitude,
-            longitude
+        console.error(
+            "All restaurant services failed:",
+            lastError
         );
-
-
-    } catch (error) {
-
-        console.error(error);
 
 
         showMessage(
             "We couldn't load nearby restaurants right now. Please try again."
+        );
+
+        return;
+    }
+
+
+    restaurants =
+        processRestaurants(
+            data.elements
+        );
+
+
+    sortCurrentRestaurants();
+
+    renderRestaurants();
+
+
+    initializeMap(
+        latitude,
+        longitude
+    );
+
+
+    if (!restaurants.length) {
+
+        showMessage(
+            "No restaurants were found within 5 km of your location."
         );
 
     }
@@ -358,7 +448,7 @@ async function findRestaurants() {
 
 
 /* =========================================================
-   PROCESS RESTAURANT DATA
+   PROCESS RESTAURANTS
 ========================================================= */
 
 function processRestaurants(elements) {
@@ -373,38 +463,43 @@ function processRestaurants(elements) {
 
 
         if (!tags.name) {
+
             return;
+
         }
 
 
         let latitude =
-            element.lat;
-
+            element.lat ?? null;
 
         let longitude =
-            element.lon;
+            element.lon ?? null;
 
 
         if (
-            !latitude &&
+            (
+                latitude === null ||
+                longitude === null
+            ) &&
             element.center
         ) {
 
             latitude =
-                element.center.lat;
+                element.center.lat ?? null;
 
             longitude =
-                element.center.lon;
+                element.center.lon ?? null;
 
         }
 
 
         if (
-            !latitude ||
-            !longitude
+            latitude === null ||
+            longitude === null
         ) {
 
             return;
+
         }
 
 
@@ -507,7 +602,7 @@ function processRestaurants(elements) {
 
 
 /* =========================================================
-   CALCULATE DISTANCE
+   DISTANCE
 ========================================================= */
 
 function calculateDistance(
@@ -551,6 +646,7 @@ function calculateDistance(
         Math.sin(
             lonDifference / 2
         ) *
+
         Math.sin(
             lonDifference / 2
         );
@@ -570,7 +666,7 @@ function calculateDistance(
 
 
 /* =========================================================
-   CONVERT DEGREES TO RADIANS
+   RADIANS
 ========================================================= */
 
 function toRadians(degrees) {
@@ -609,7 +705,7 @@ function formatCuisine(cuisine) {
 
 
 /* =========================================================
-   GET ADDRESS
+   ADDRESS
 ========================================================= */
 
 function getAddress(tags) {
@@ -657,7 +753,7 @@ function getAddress(tags) {
 
 
 /* =========================================================
-   DISPLAY RESTAURANTS
+   RENDER RESTAURANTS
 ========================================================= */
 
 function renderRestaurants() {
@@ -684,11 +780,16 @@ function renderRestaurants() {
 
         `;
 
+        clearRestaurantMarkers();
+
         return;
     }
 
 
     restaurantList.innerHTML = "";
+
+
+    clearRestaurantMarkers();
 
 
     restaurants.forEach(function (restaurant) {
@@ -832,7 +933,9 @@ function renderRestaurants() {
                 if (
                     event.target.tagName === "A"
                 ) {
+
                     return;
+
                 }
 
 
@@ -863,7 +966,7 @@ function renderRestaurants() {
 
 
 /* =========================================================
-   CREATE DIRECTIONS LINK
+   DIRECTIONS
 ========================================================= */
 
 function createDirectionsURL(
@@ -883,7 +986,7 @@ function createDirectionsURL(
 
 
 /* =========================================================
-   SEARCH RESTAURANTS
+   SEARCH
 ========================================================= */
 
 function searchRestaurants() {
@@ -892,6 +995,17 @@ function searchRestaurants() {
         searchInput.value
             .trim()
             .toLowerCase();
+
+
+    if (!restaurants.length) {
+
+        showMessage(
+            "Please find restaurants near you first."
+        );
+
+        return;
+
+    }
 
 
     if (!searchTerm) {
@@ -1060,7 +1174,7 @@ function filterByCategory(category) {
 
 
 /* =========================================================
-   RENDER FILTERED RESTAURANTS
+   FILTERED RESULTS
 ========================================================= */
 
 function renderFilteredRestaurants(
@@ -1112,7 +1226,7 @@ function renderFilteredRestaurants(
 
 
 /* =========================================================
-   SORT RESTAURANTS
+   SORT
 ========================================================= */
 
 function sortCurrentRestaurants() {
@@ -1168,216 +1282,4 @@ function sortCurrentRestaurants() {
             function (a, b) {
 
                 return (
-                    parseFloat(a.distance) -
-                    parseFloat(b.distance)
-                );
-
-            }
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   SHOW LOADING MESSAGE
-========================================================= */
-
-function showLoading(message) {
-
-    restaurantList.innerHTML = `
-
-        <div class="empty-state">
-
-            <div class="empty-icon">
-                ⏳
-            </div>
-
-            <h3>
-                ${escapeHTML(message)}
-            </h3>
-
-            <p>
-                Please wait a moment.
-            </p>
-
-        </div>
-
-    `;
-
-}
-
-
-/* =========================================================
-   SHOW ERROR / MESSAGE
-========================================================= */
-
-function showMessage(message) {
-
-    restaurantList.innerHTML = `
-
-        <div class="empty-state">
-
-            <div class="empty-icon">
-                ⚠️
-            </div>
-
-            <h3>
-                Something went wrong
-            </h3>
-
-            <p>
-                ${escapeHTML(message)}
-            </p>
-
-            <button
-                id="retryLocationButton"
-                style="
-                    margin-top:10px;
-                    border:none;
-                    padding:12px 20px;
-                    border-radius:8px;
-                    background:#ff5a36;
-                    color:white;
-                    font-weight:700;
-                    cursor:pointer;
-                "
-            >
-                Try Again
-            </button>
-
-        </div>
-
-    `;
-
-
-    const retryButton =
-        document.getElementById(
-            "retryLocationButton"
-        );
-
-
-    if (retryButton) {
-
-        retryButton.addEventListener(
-            "click",
-            getUserLocation
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHTML(value) {
-
-    const div =
-        document.createElement("div");
-
-
-    div.textContent =
-        value || "";
-
-
-    return div.innerHTML;
-
-}
-
-
-/* =========================================================
-   ESCAPE ATTRIBUTE
-========================================================= */
-
-function escapeAttribute(value) {
-
-    return String(value || "")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-
-}
-
-
-/* =========================================================
-   EVENT LISTENERS
-========================================================= */
-
-locationButton.addEventListener(
-    "click",
-    getUserLocation
-);
-
-
-emptyLocationButton.addEventListener(
-    "click",
-    getUserLocation
-);
-
-
-searchButton.addEventListener(
-    "click",
-    searchRestaurants
-);
-
-
-searchInput.addEventListener(
-    "keydown",
-    function (event) {
-
-        if (event.key === "Enter") {
-
-            searchRestaurants();
-
-        }
-
-    }
-);
-
-
-sortRestaurants.addEventListener(
-    "change",
-    function () {
-
-        sortCurrentRestaurants();
-
-        renderRestaurants();
-
-    }
-);
-
-
-categoryButtons.forEach(
-    function (button) {
-
-        button.addEventListener(
-            "click",
-            function () {
-
-                const category =
-                    button.dataset.category;
-
-
-                filterByCategory(
-                    category
-                );
-
-            }
-        );
-
-    }
-);
-
-
-/* =========================================================
-   START NEARBITE
-========================================================= */
-
-loadMapLibrary();
-
-console.log(
-    "NearBite is ready."
-);
+```
