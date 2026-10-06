@@ -1,0 +1,836 @@
+/* =========================
+   GENERAL
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f7f8fa;
+    color: #202124;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    width: 100%;
+    height: 76px;
+    padding: 0 6%;
+    background: white;
+    border-bottom: 1px solid #e8e8e8;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: 800;
+    color: #ff5a36;
+}
+
+nav {
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #444;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+nav a:hover {
+    color: #ff5a36;
+}
+
+#locationButton {
+    border: none;
+    background: #ff5a36;
+    color: white;
+
+    padding: 11px 18px;
+    border-radius: 8px;
+
+    font-weight: 700;
+}
+
+#locationButton:hover {
+    background: #e94b29;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    min-height: 510px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 80px 20px;
+
+    background:
+        linear-gradient(
+            rgba(255, 90, 54, 0.92),
+            rgba(255, 90, 54, 0.92)
+        );
+}
+
+.hero-content {
+    max-width: 850px;
+}
+
+.small-title,
+.section-label {
+    margin: 0 0 12px;
+
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+
+    color: #ff5a36;
+}
+
+.hero .small-title {
+    color: #ffe4dc;
+}
+
+.hero h1 {
+    margin: 0;
+
+    color: white;
+
+    font-size: clamp(42px, 6vw, 70px);
+    line-height: 1.05;
+}
+
+.hero h1 span {
+    display: block;
+    color: #fff3ef;
+}
+
+.hero-text {
+    max-width: 650px;
+
+    margin: 25px auto 35px;
+
+    color: #fff;
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-area {
+    max-width: 720px;
+    margin: auto;
+
+    padding: 8px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    display: flex;
+    gap: 8px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+#searchInput {
+    flex: 1;
+
+    min-width: 0;
+
+    border: none;
+    outline: none;
+
+    padding: 15px 18px;
+
+    font-size: 16px;
+}
+
+#searchButton {
+    border: none;
+
+    padding: 0 25px;
+
+    border-radius: 8px;
+
+    background: #202124;
+    color: white;
+
+    font-weight: 700;
+}
+
+#searchButton:hover {
+    background: #000;
+}
+
+
+/* =========================
+   CATEGORIES
+========================= */
+
+.categories-section {
+    max-width: 1200px;
+
+    margin: auto;
+
+    padding: 70px 6%;
+}
+
+.section-heading {
+    margin-bottom: 30px;
+
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+}
+
+.section-heading h2 {
+    margin: 0;
+
+    font-size: 32px;
+}
+
+.categories {
+    display: grid;
+
+    grid-template-columns:
+        repeat(8, 1fr);
+
+    gap: 12px;
+}
+
+.category {
+    min-height: 105px;
+
+    border: 1px solid #e9e9e9;
+
+    border-radius: 12px;
+
+    background: white;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    transition: 0.2s;
+}
+
+.category:hover {
+    transform: translateY(-4px);
+
+    border-color: #ff5a36;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.07);
+}
+
+.category span {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   DISCOVERY SECTION
+========================= */
+
+.discovery-section {
+    max-width: 1400px;
+
+    margin: auto;
+
+    padding: 30px 6% 80px;
+
+    display: grid;
+
+    grid-template-columns:
+        45% 55%;
+
+    min-height: 700px;
+}
+
+.restaurant-panel {
+    background: white;
+
+    border: 1px solid #e7e7e7;
+
+    border-radius: 16px 0 0 16px;
+
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 25px;
+
+    border-bottom: 1px solid #eee;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.panel-header h2 {
+    margin: 0;
+
+    font-size: 30px;
+}
+
+.panel-header .section-label {
+    margin-bottom: 5px;
+}
+
+#sortRestaurants {
+    padding: 9px 12px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 7px;
+
+    background: white;
+
+    color: #444;
+}
+
+
+/* =========================
+   RESTAURANT LIST
+========================= */
+
+.restaurant-list {
+    padding: 20px;
+}
+
+.empty-state {
+    min-height: 450px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 40px;
+}
+
+.empty-icon {
+    width: 70px;
+    height: 70px;
+
+    margin-bottom: 20px;
+
+    border-radius: 50%;
+
+    background: #fff1ed;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 30px;
+}
+
+.empty-state h3 {
+    margin: 0 0 10px;
+
+    font-size: 22px;
+}
+
+.empty-state p {
+    max-width: 350px;
+
+    color: #777;
+
+    line-height: 1.6;
+}
+
+#emptyLocationButton {
+    margin-top: 10px;
+
+    border: none;
+
+    padding: 12px 20px;
+
+    border-radius: 8px;
+
+    background: #ff5a36;
+    color: white;
+
+    font-weight: 700;
+}
+
+
+/* =========================
+   RESTAURANT CARDS
+========================= */
+
+.restaurant-card {
+    padding: 18px;
+
+    margin-bottom: 14px;
+
+    border: 1px solid #eee;
+
+    border-radius: 12px;
+
+    background: white;
+
+    transition: 0.2s;
+}
+
+.restaurant-card:hover {
+    border-color: #ffb29f;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.06);
+}
+
+.restaurant-card h3 {
+    margin: 0 0 8px;
+
+    font-size: 18px;
+}
+
+.restaurant-card p {
+    margin: 5px 0;
+
+    color: #666;
+
+    font-size: 14px;
+}
+
+.restaurant-rating {
+    color: #f5a623;
+
+    font-weight: 700;
+}
+
+
+/* =========================
+   MAP
+========================= */
+
+.map-panel {
+    min-height: 650px;
+}
+
+.map {
+    width: 100%;
+    height: 100%;
+
+    min-height: 650px;
+
+    border-radius: 0 16px 16px 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e9f0e8,
+            #e2e9ed
+        );
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.map-placeholder {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 80%;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    padding: 35px;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.map-icon {
+    font-size: 45px;
+
+    margin-bottom: 10px;
+}
+
+.map-placeholder h3 {
+    margin: 0 0 8px;
+}
+
+.map-placeholder p {
+    margin: 0;
+
+    color: #777;
+}
+
+
+/* =========================
+   FEATURES
+========================= */
+
+.features-section {
+    background: white;
+
+    padding: 90px 6%;
+}
+
+.centered {
+    text-align: center;
+
+    display: block;
+}
+
+.centered h2 {
+    margin-bottom: 15px;
+}
+
+.centered > p:last-child {
+    color: #777;
+}
+
+.features {
+    max-width: 1100px;
+
+    margin: 50px auto 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 25px;
+}
+
+.feature {
+    text-align: center;
+
+    padding: 30px 20px;
+}
+
+.feature-icon {
+    width: 65px;
+    height: 65px;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: #fff1ed;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 27px;
+}
+
+.feature h3 {
+    margin: 0 0 10px;
+}
+
+.feature p {
+    margin: 0;
+
+    color: #777;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
+   ABOUT
+========================= */
+
+.about-section {
+    padding: 100px 6%;
+
+    background: #f7f8fa;
+}
+
+.about-content {
+    max-width: 750px;
+
+    margin: auto;
+
+    text-align: center;
+}
+
+.about-content h2 {
+    font-size: 40px;
+
+    margin: 0 0 20px;
+}
+
+.about-content p:last-child {
+    color: #666;
+
+    line-height: 1.8;
+
+    font-size: 17px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    background: #202124;
+
+    color: white;
+
+    padding: 50px 6% 20px;
+}
+
+.footer-content {
+    max-width: 1200px;
+
+    margin: auto;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 40px;
+}
+
+.footer-brand p {
+    color: #aaa;
+}
+
+.footer-links {
+    display: flex;
+
+    gap: 25px;
+
+    align-items: center;
+}
+
+.footer-links a {
+    color: #ccc;
+
+    text-decoration: none;
+
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    max-width: 1200px;
+
+    margin: 40px auto 0;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #3a3a3a;
+}
+
+.footer-bottom p {
+    margin: 0;
+
+    color: #888;
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1000px) {
+
+    nav {
+        display: none;
+    }
+
+    .categories {
+        grid-template-columns:
+            repeat(4, 1fr);
+    }
+
+    .discovery-section {
+        grid-template-columns: 1fr;
+    }
+
+    .restaurant-panel {
+        border-radius: 16px;
+    }
+
+    .map-panel {
+        margin-top: 20px;
+    }
+
+    .map {
+        border-radius: 16px;
+    }
+
+    .features {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    header {
+        height: auto;
+
+        padding: 18px 5%;
+
+        gap: 15px;
+    }
+
+    .logo {
+        font-size: 21px;
+    }
+
+    #locationButton {
+        padding: 9px 12px;
+
+        font-size: 12px;
+    }
+
+    .hero {
+        min-height: 550px;
+
+        padding: 70px 20px;
+    }
+
+    .hero h1 {
+        font-size: 42px;
+    }
+
+    .hero-text {
+        font-size: 16px;
+    }
+
+    .search-area {
+        flex-direction: column;
+
+        padding: 10px;
+    }
+
+    #searchInput {
+        width: 100%;
+
+        padding: 15px;
+    }
+
+    #searchButton {
+        min-height: 48px;
+    }
+
+    .categories-section {
+        padding: 55px 5%;
+    }
+
+    .section-heading h2 {
+        font-size: 26px;
+    }
+
+    .categories {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .discovery-section {
+        padding: 20px 5% 60px;
+    }
+
+    .panel-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    #sortRestaurants {
+        width: 100%;
+    }
+
+    .map {
+        min-height: 450px;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .about-content h2 {
+        font-size: 32px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+    }
+
+    .footer-links {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+}
