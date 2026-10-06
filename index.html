@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NearBite - Find Restaurants Near You</title>
+
+    <meta
+        name="description"
+        content="NearBite helps you discover restaurants near your location."
+    >
+</head>
+
+<body>
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header>
+
+        <div class="logo">
+            🍽️ NearBite
+        </div>
+
+        <nav>
+            <a href="#restaurants">Restaurants</a>
+            <a href="#categories">Categories</a>
+            <a href="#about">About</a>
+        </nav>
+
+        <button id="locationButton">
+            📍 Use My Location
+        </button>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main>
+
+        <!-- HERO / SEARCH SECTION -->
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <p class="small-title">
+                    DISCOVER FOOD NEAR YOU
+                </p>
+
+                <h1>
+                    Find your next
+                    <span>favorite restaurant.</span>
+                </h1>
+
+                <p class="hero-text">
+                    Discover restaurants, explore menus,
+                    check ratings and find great food near you.
+                </p>
+
+
+                <!-- SEARCH -->
+
+                <div class="search-area">
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search restaurants, food or cuisine..."
+                    >
+
+                    <button id="searchButton">
+                        🔎 Search
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             CATEGORY SECTION
+        ========================== -->
+
+        <section id="categories" class="categories-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="section-label">
+                        EXPLORE
+                    </p>
+
+                    <h2>
+                        What are you craving?
+                    </h2>
+                </div>
+
+            </div>
+
+
+            <div class="categories">
+
+                <button class="category" data-category="pizza">
+                    🍕
+                    <span>Pizza</span>
+                </button>
+
+                <button class="category" data-category="burgers">
+                    🍔
+                    <span>Burgers</span>
+                </button>
+
+                <button class="category" data-category="chinese">
+                    🥡
+                    <span>Chinese</span>
+                </button>
+
+                <button class="category" data-category="italian">
+                    🍝
+                    <span>Italian</span>
+                </button>
+
+                <button class="category" data-category="sushi">
+                    🍣
+                    <span>Sushi</span>
+                </button>
+
+                <button class="category" data-category="chicken">
+                    🍗
+                    <span>Chicken</span>
+                </button>
+
+                <button class="category" data-category="cafe">
+                    ☕
+                    <span>Cafés</span>
+                </button>
+
+                <button class="category" data-category="healthy">
+                    🥗
+                    <span>Healthy</span>
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             RESTAURANTS + MAP
+        ========================== -->
+
+        <section id="restaurants" class="discovery-section">
+
+            <!-- RESTAURANT LIST -->
+
+            <div class="restaurant-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <p class="section-label">
+                            NEAR YOU
+                        </p>
+
+                        <h2>
+                            Restaurants
+                        </h2>
+
+                    </div>
+
+                    <select id="sortRestaurants">
+
+                        <option value="recommended">
+                            Recommended
+                        </option>
+
+                        <option value="rating">
+                            Highest Rated
+                        </option>
+
+                        <option value="distance">
+                            Nearest
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Restaurant cards will be inserted here
+                     by JavaScript later -->
+
+                <div
+                    id="restaurantList"
+                    class="restaurant-list"
+                >
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            📍
+                        </div>
+
+                        <h3>
+                            Find restaurants near you
+                        </h3>
+
+                        <p>
+                            Allow location access to discover
+                            restaurants around you.
+                        </p>
+
+                        <button id="emptyLocationButton">
+                            Find Restaurants Near Me
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MAP -->
+
+            <div class="map-panel">
+
+                <div
+                    id="map"
+                    class="map"
+                    aria-label="Restaurant map"
+                >
+
+                    <div class="map-placeholder">
+
+                        <div class="map-icon">
+                            🗺️
+                        </div>
+
+                        <h3>
+                            Restaurant Map
+                        </h3>
+
+                        <p>
+                            Your nearby restaurants will
+                            appear here.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             FEATURE SECTION
+        ========================== -->
+
+        <section class="features-section">
+
+            <div class="section-heading centered">
+
+                <p class="section-label">
+                    WHY NEARBITE
+                </p>
+
+                <h2>
+                    Find food without the hassle.
+                </h2>
+
+                <p>
+                    Everything you need to discover your
+                    next great meal.
+                </p>
+
+            </div>
+
+
+            <div class="features">
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        📍
+                    </div>
+
+                    <h3>
+                        Find Nearby
+                    </h3>
+
+                    <p>
+                        Discover restaurants close to
+                        your current location.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        ⭐
+                    </div>
+
+                    <h3>
+                        Real Ratings
+                    </h3>
+
+                    <p>
+                        Compare ratings and reviews before
+                        choosing where to eat.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        🧭
+                    </div>
+
+                    <h3>
+                        Get Directions
+                    </h3>
+
+                    <p>
+                        Easily find your way to the
+                        restaurant you choose.
+                    </p>
+
+                </article>
+
+
+                <article class="feature">
+
+                    <div class="feature-icon">
+                        🔎
+                    </div>
+
+                    <h3>
+                        Easy Search
+                    </h3>
+
+                    <p>
+                        Search by restaurant, cuisine
+                        or the food you want.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ABOUT SECTION
+        ========================== -->
+
+        <section id="about" class="about-section">
+
+            <div class="about-content">
+
+                <p class="section-label">
+                    ABOUT NEARBITE
+                </p>
+
+                <h2>
+                    Good food is closer than you think.
+                </h2>
+
+                <p>
+                    NearBite is designed to make finding
+                    great restaurants simple. Search for
+                    the food you love, discover places near
+                    you and choose where you want to eat.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        <div class="footer-content">
+
+            <div class="footer-brand">
+
+                <div class="logo">
+                    🍽️ NearBite
+                </div>
+
+                <p>
+                    Discover great food near you.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <a href="#restaurants">
+                    Restaurants
+                </a>
+
+                <a href="#categories">
+                    Categories
+                </a>
+
+                <a href="#about">
+                    About
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 NearBite. All rights reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- JavaScript will be connected here later -->
+
+    <script src="script.js"></script>
+
+</body>
+</html>
